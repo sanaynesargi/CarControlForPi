@@ -2,11 +2,11 @@ import pygame
 
 class Arrow:
 
-    def __init__(self, x, y, surface, img_path):
+    def __init__(self, x, y, surface, img):
 
         self.x = x
         self.y = y
-        self.path = img
+        self.img = img
         self.surf = surface
 
     def draw(self):
