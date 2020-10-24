@@ -35,7 +35,6 @@ def load_images():
 def create_arrows(img_arr):
     arrs = []
     x, y = (S_WIDTH//2 - 25) - 60, (S_HEIGHT//2 - 25)
-    print(len(img_arr))
 
     for i in range(2):
         arrs.append(Arrow(x, y, win, img_arr[-(i + 1)]))
@@ -74,9 +73,15 @@ def main():
     while run:
         draw()
 
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            for a in ARROWS:
+                a.pressed = False
+                if pygame.mouse.get_pressed()[0]:
+                    a.pressed = a.check_press(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
     pygame.quit()
 
