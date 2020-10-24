@@ -1,15 +1,8 @@
-# import RPi.GPIO as GPIO
 import pygame, time, os
 from arrow import Arrow
+import requests
 
 pygame.init()
-
-# GPIO.setwarnings(False)
-# GPIO.setmode(GPIO.BCM)
-
-# GLOBAL VARIBLES
-FIRST_CONTROL_PINS = [5, 6, 19, 26]
-SECOND_CONTOL_PINS = [21, 20, 16, 12]
 
 # PYGAME VARIABLES
 S_WIDTH, S_HEIGHT = 300, 300
@@ -24,20 +17,21 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 def load_images():
-    names = ['up', 'down', 'left', 'right']
+    names = ['up', 'down', 'right', 'left']
     imgs = []
 
     for name in names:
-        imgs.append(pygame.image.load(os.path.join('arrows', name + '.png')).convert())
+        imgs.append(pygame.image.load(os.path.join('images', 'arrows', name + '.png')).convert())
 
     return imgs
 
 def create_arrows(img_arr):
+    names = ['up', 'down', 'left', 'right']
     arrs = []
     x, y = (S_WIDTH//2 - 25) - 60, (S_HEIGHT//2 - 25)
 
     for i in range(2):
-        arrs.append(Arrow(x, y, win, img_arr[-(i + 1)]))
+        arrs.append(Arrow(x, y, 50, 50, win, img_arr[-(i + 1)], names[-(i + 1)], True))
         x += 120
         
 
@@ -45,9 +39,12 @@ def create_arrows(img_arr):
     y -= 60
 
     for i in range(2):
-        arrs.append(Arrow(x, y, win, img_arr[i]))
+        arrs.append(Arrow(x, y, 50, 50, win, img_arr[i], names[i], True))
         y += 120
-        
+    
+    x, y = (S_WIDTH//2 - 15), (S_HEIGHT//2 - 15)
+    stop_img = pygame.image.load(os.path.join('images', 'stop.png')).convert()
+    arrs.append(Arrow(x, y, 30, 30, win, stop_img, 'stop', False))
 
     return arrs
 
@@ -79,9 +76,14 @@ def main():
                 run = False
 
             for a in ARROWS:
-                a.pressed = False
+                if a != ARROWS[-1]:
+                    a.pressed = False
+                    
                 if pygame.mouse.get_pressed()[0]:
-                    a.pressed = a.check_press(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+                    if a == ARROWS[-1] and a.pressed:
+                        a.pressed = False
+                    else:
+                        a.pressed = a.check_press(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
     pygame.quit()
 
