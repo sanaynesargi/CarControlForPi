@@ -1,6 +1,5 @@
 import pygame, time, os
 from arrow import Arrow
-import requests
 
 pygame.init()
 
@@ -63,6 +62,11 @@ def draw():
 
     pygame.display.update()
 
+
+def toggle_arrow_presses(mode):
+    for a in ARROWS[:4]:
+        a.pressable = mode
+
 def main():
     pygame.display.set_caption("Car Control Wizard")
 
@@ -78,10 +82,12 @@ def main():
             for a in ARROWS:
                 if a != ARROWS[-1]:
                     a.pressed = False
+                    #toggle_arrow_presses(False)
                     
                 if pygame.mouse.get_pressed()[0]:
                     if a == ARROWS[-1] and a.pressed:
                         a.pressed = False
+                        #toggle_arrow_presses(True)
                     else:
                         a.pressed = a.check_press(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
